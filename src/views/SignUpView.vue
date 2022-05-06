@@ -1,7 +1,11 @@
 <template>
-  <div>SignUp View</div>
+  <div>
+    <SignUpForm />
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import SignUpForm from "@/components/forms/SignUpForm.vue";
+</script>
 
 <style lang="scss" scoped></style>

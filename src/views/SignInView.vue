@@ -1,5 +1,5 @@
 <template>
-  <div>Home View</div>
+  <div>SignIn View</div>
 </template>
 
 <script setup></script>

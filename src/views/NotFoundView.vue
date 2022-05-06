@@ -1,6 +1,4 @@
-<template>
-  <div>Home View</div>
-</template>
+<template>NotFound View</template>
 
 <script setup></script>
 

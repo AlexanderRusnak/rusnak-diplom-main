@@ -1,5 +1,5 @@
 <template>
-  <div>Home View</div>
+  <div>Categories View</div>
 </template>
 
 <script setup></script>

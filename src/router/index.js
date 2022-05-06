@@ -1,5 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import HomeView from "@/views/HomeView.vue";
+import SignUpView from "@/views/SignUpView.vue";
+import SignInView from "@/views/SignInView.vue";
+import PasswordForgetView from "@/views/PasswordForgetView.vue";
+import AccountView from "@/views/AccountView.vue";
+import CategoriesView from "@/views/CategoriesView.vue";
+import PositionsView from "@/views/PositionsView.vue";
+import WaitersView from "@/views/WaitersView.vue";
+import OrdersView from "@/views/OrdersView.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
 
 const routes = [
   {
@@ -8,13 +17,52 @@ const routes = [
     component: HomeView,
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: "/sign-up",
+    name: "sigh-up",
+    component: SignUpView,
+  },
+  {
+    path: "/sign-in",
+    name: "sigh-in",
+    component: SignInView,
+  },
+  {
+    path: "/password-forget",
+    name: "password-forget",
+    component: PasswordForgetView,
+  },
+  {
+    path: "/account",
+    name: "account",
+    component: AccountView,
+  },
+  {
+    path: "/categories",
+    name: "categories",
+    component: CategoriesView,
+  },
+  {
+    path: "/positions",
+    name: "positions",
+    component: PositionsView,
+  },
+  {
+    path: "/waiters",
+    name: "waiters",
+    component: WaitersView,
+  },
+  {
+    path: "/orders",
+    name: "orders",
+    component: OrdersView,
+  },
+  {
+    path: "/404",
+    component: NotFoundView,
+  },
+  {
+    path: "/:catchAll(.*)",
+    redirect: "/404",
   },
 ];
 

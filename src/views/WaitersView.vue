@@ -1,5 +1,5 @@
 <template>
-  <div>Home View</div>
+  <div>Waiters View</div>
 </template>
 
 <script setup></script>

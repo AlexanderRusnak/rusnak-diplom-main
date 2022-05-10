@@ -25,6 +25,11 @@ const props = defineProps(["isWhite", "size"]);
   border: 1px solid black;
   border-radius: 8px;
   cursor: pointer;
+  opacity: 0.85;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .button_white {

@@ -34,6 +34,12 @@
         >
           Поле должно быть заполнено
         </div>
+        <div
+          v-else-if="form.email.touched && form.email.errors.isEmail"
+          class="error-message"
+        >
+          Введите корректный email
+        </div>
       </div>
       <div class="sign-up-form__input-container">
         <div>
@@ -71,7 +77,7 @@
       <BaseButton
         @click="submitForm"
         :isWhite="true"
-        :size="'medium'"
+        :size="'large'"
         :disabled="!form.valid"
         :class="{ button_disabled: !form.valid }"
         >зарегистрироваться</BaseButton
@@ -91,6 +97,13 @@ import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.vue";
 // валидаторы
 const required = (value) => !!value;
 const minLength = (number) => (val) => val.length >= number;
+const isEmail = (value) => {
+  const regexp =
+    // eslint-disable-next-line no-useless-escape
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
+
+  return regexp.test(value);
+};
 
 // использование хука useForm для передачи
 // хуку useField в дальнейшем и валидации полей
@@ -101,7 +114,7 @@ const form = useForm({
   },
   email: {
     value: "",
-    validators: { required },
+    validators: { required, isEmail },
   },
   password: {
     value: "",

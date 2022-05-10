@@ -81,10 +81,15 @@
 <script setup>
 import { ref } from "vue";
 import { useForm } from "@/use/form";
+import { useRouter } from "vue-router";
+import FirebaseService from "@/services/FirebaseService";
 import BaseInput from "@/components/base/BaseInput.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import OpenedEyeIcon from "@/assets/icons/OpenedEyeIcon.vue";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.vue";
+
+// роутер
+const router = useRouter();
 
 // валидаторы
 const required = (value) => !!value;
@@ -112,8 +117,18 @@ const form = useForm({
 
 // метод при нажатии кнопки submit
 const submitForm = () => {
-  console.log("Email: ", form.email.value);
-  console.log("Password: ", form.password.value);
+  FirebaseService.doSignInWithEmailAndPassword(
+    form.email.value,
+    form.password.value
+  )
+    .then(() => {
+      console.log("sign in success");
+      router.push("/");
+    })
+    .catch((err) => {
+      console.log("sign in error");
+      console.log(err);
+    });
 };
 
 const isPasswordShown = ref(false);

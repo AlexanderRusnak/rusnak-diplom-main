@@ -17,6 +17,12 @@
         >
           Поле должно быть заполнено
         </div>
+        <div
+          v-else-if="form.username.touched && form.username.errors.minLength"
+          class="error-message"
+        >
+          Минимальная длина 6 символов
+        </div>
       </div>
       <div class="sign-up-form__input-container">
         <BaseInput
@@ -89,10 +95,15 @@
 <script setup>
 import { ref } from "vue";
 import { useForm } from "@/use/form";
+import { useRouter } from "vue-router";
+import FirebaseService from "@/services/FirebaseService";
 import BaseInput from "@/components/base/BaseInput.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import OpenedEyeIcon from "@/assets/icons/OpenedEyeIcon.vue";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.vue";
+
+// роутер
+const router = useRouter();
 
 // валидаторы
 const required = (value) => !!value;
@@ -110,7 +121,7 @@ const isEmail = (value) => {
 const form = useForm({
   username: {
     value: "",
-    validators: { required },
+    validators: { required, minLength: minLength(6) },
   },
   email: {
     value: "",
@@ -124,8 +135,18 @@ const form = useForm({
 
 // метод при нажатии кнопки submit
 const submitForm = () => {
-  console.log("Email: ", form.email.value);
-  console.log("Password: ", form.password.value);
+  FirebaseService.doCreateUserWithEmailAndPassword(
+    form.email.value,
+    form.password.value
+  )
+    .then(() => {
+      console.log("sign up success");
+      router.push("/");
+    })
+    .catch((err) => {
+      console.log("sign up error");
+      console.log(err);
+    });
 };
 
 const isPasswordShown = ref(false);

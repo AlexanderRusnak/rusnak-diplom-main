@@ -1,9 +1,12 @@
 import firebase from "@/firebase/firebase";
-const auth = firebase.auth();
+
+export const auth = firebase.auth();
 const db = firebase.database();
 
 class FirebaseService {
   // - *** AUTH API *** -
+
+  checkAuthStateChanged = (func) => auth.onAuthStateChanged(func);
 
   doCreateUserWithEmailAndPassword = (email, password) =>
     auth.createUserWithEmailAndPassword(email, password);

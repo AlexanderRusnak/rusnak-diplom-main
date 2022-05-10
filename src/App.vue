@@ -10,9 +10,33 @@
     <router-link to="/waiters">Waiters</router-link> |
     <router-link to="/orders">Orders</router-link> |
     <router-link to="/404">NotFoundView</router-link> |
+    <button @click="signOut">Exit from account</button>
   </nav>
   <router-view />
 </template>
+
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import FirebaseService from "@/services/FirebaseService";
+
+const router = useRouter();
+
+const isLoggedIn = ref(true);
+
+FirebaseService.checkAuthStateChanged(function (user) {
+  if (user) {
+    isLoggedIn.value = true; // if we have a user
+  } else {
+    isLoggedIn.value = false; // if we do not
+  }
+});
+
+const signOut = () => {
+  FirebaseService.doSignOut();
+  router.push("/");
+};
+</script>
 
 <style lang="scss">
 * {

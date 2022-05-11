@@ -88,6 +88,9 @@ import BaseButton from "@/components/base/BaseButton.vue";
 import OpenedEyeIcon from "@/assets/icons/OpenedEyeIcon.vue";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.vue";
 
+// ошибка auth
+let errorMessage = ref("");
+
 // роутер
 const router = useRouter();
 
@@ -125,9 +128,23 @@ const submitForm = () => {
       console.log("sign in success");
       router.push("/");
     })
-    .catch((err) => {
-      console.log("sign in error");
-      console.log(err);
+    .catch((error) => {
+      switch (error.code) {
+        case "auth/invalid-email":
+          errorMessage.value = "Некорректный email";
+          break;
+        case "auth/user-not-found":
+          errorMessage.value = "Аккаунта с данной почтой не существует";
+          break;
+        case "auth/wrong-password":
+          errorMessage.value = "Неправильный пароль";
+          break;
+        default:
+          errorMessage.value = "Email или пароль введены с ошибкой";
+          break;
+      }
+
+      alert(errorMessage.value);
     });
 };
 

@@ -1,9 +1,13 @@
 <template>
-  <nav>
+  <nav v-if="!isLoggedIn">
     <router-link to="/">Home</router-link> |
     <router-link to="/sign-up">SignUp</router-link> |
     <router-link to="/sign-in">SignIn</router-link> |
     <router-link to="/password-forget">PasswordForget</router-link> |
+    <router-link to="/404">NotFoundView</router-link> |
+  </nav>
+  <nav v-if="isLoggedIn">
+    <router-link to="/">Home</router-link> |
     <router-link to="/account">Account</router-link> |
     <router-link to="/categories">Categories</router-link> |
     <router-link to="/positions">Positions</router-link> |

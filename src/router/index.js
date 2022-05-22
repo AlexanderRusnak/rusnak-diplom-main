@@ -8,6 +8,7 @@ import CategoriesView from "@/views/CategoriesView.vue";
 import PositionsView from "@/views/PositionsView.vue";
 import WaitersView from "@/views/WaitersView.vue";
 import OrdersView from "@/views/OrdersView.vue";
+import TestView from "@/views/TestView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 
 const routes = [
@@ -55,6 +56,11 @@ const routes = [
     path: "/orders",
     name: "orders",
     component: OrdersView,
+  },
+  {
+    path: "/test",
+    name: "test",
+    component: TestView,
   },
   {
     path: "/404",

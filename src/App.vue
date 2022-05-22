@@ -5,6 +5,7 @@
     <router-link to="/sign-in">SignIn</router-link> |
     <router-link to="/password-forget">PasswordForget</router-link> |
     <router-link to="/404">NotFoundView</router-link> |
+    <router-link to="/test">TestView</router-link>
   </nav>
   <nav v-if="isLoggedIn">
     <router-link to="/">Home</router-link> |
@@ -14,6 +15,7 @@
     <router-link to="/waiters">Waiters</router-link> |
     <router-link to="/orders">Orders</router-link> |
     <router-link to="/404">NotFoundView</router-link> |
+    <router-link to="/test">TestView</router-link> |
     <button @click="signOut">Exit from account</button>
   </nav>
   <router-view />

@@ -1,32 +1,17 @@
 <template>
-  <nav v-if="!isLoggedIn">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/sign-up">SignUp</router-link> |
-    <router-link to="/sign-in">SignIn</router-link> |
-    <router-link to="/password-forget">PasswordForget</router-link> |
-    <router-link to="/404">NotFoundView</router-link> |
-    <router-link to="/test">TestView</router-link>
-  </nav>
-  <nav v-if="isLoggedIn">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/account">Account</router-link> |
-    <router-link to="/categories">Categories</router-link> |
-    <router-link to="/positions">Positions</router-link> |
-    <router-link to="/waiters">Waiters</router-link> |
-    <router-link to="/orders">Orders</router-link> |
-    <router-link to="/404">NotFoundView</router-link> |
-    <router-link to="/test">TestView</router-link> |
-    <button @click="signOut">Exit from account</button>
-  </nav>
-  <router-view />
+  <div>
+    <TheHeader v-if="isLoggedIn" />
+    <TheNavigation v-if="isLoggedIn" />
+
+    <router-view />
+  </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import FirebaseService from "@/services/FirebaseService";
-
-const router = useRouter();
+import TheHeader from "@/components/base/TheHeader.vue";
+import TheNavigation from "@/components/base/TheNavigation.vue";
 
 const isLoggedIn = ref(true);
 
@@ -37,11 +22,6 @@ FirebaseService.checkAuthStateChanged(function (user) {
     isLoggedIn.value = false; // if we do not
   }
 });
-
-const signOut = () => {
-  FirebaseService.doSignOut();
-  router.push("/");
-};
 </script>
 
 <style lang="scss">

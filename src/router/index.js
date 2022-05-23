@@ -3,7 +3,6 @@ import HomeView from "@/views/HomeView.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import SignInView from "@/views/SignInView.vue";
 import PasswordForgetView from "@/views/PasswordForgetView.vue";
-import AccountView from "@/views/AccountView.vue";
 import CategoriesView from "@/views/CategoriesView.vue";
 import PositionsView from "@/views/PositionsView.vue";
 import WaitersView from "@/views/WaitersView.vue";
@@ -31,11 +30,6 @@ const routes = [
     path: "/password-forget",
     name: "password-forget",
     component: PasswordForgetView,
-  },
-  {
-    path: "/account",
-    name: "account",
-    component: AccountView,
   },
   {
     path: "/categories",

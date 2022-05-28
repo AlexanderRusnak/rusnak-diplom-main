@@ -13,7 +13,7 @@ import BaseContainer from "@/components/base/BaseContainer.vue";
 const router = useRouter();
 const authListener = FirebaseService.checkAuthStateChanged(function (user) {
   if (!user) {
-    router.push("/");
+    router.push("/sign-in");
   }
 });
 onBeforeUnmount(() => {

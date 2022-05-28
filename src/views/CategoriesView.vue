@@ -54,7 +54,7 @@ const router = useRouter();
 // проверка авторизации
 const authListener = FirebaseService.checkAuthStateChanged(function (user) {
   if (!user) {
-    router.push("/");
+    router.push("/sign-in");
   }
 });
 

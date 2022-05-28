@@ -11,18 +11,18 @@
           :isOpened="true"
           @blur="form.username.blur"
         />
-        <div
+
+        <BaseInputError
           v-if="form.username.touched && form.username.errors.required"
-          class="error-message"
         >
           Поле должно быть заполнено
-        </div>
-        <div
+        </BaseInputError>
+
+        <BaseInputError
           v-else-if="form.username.touched && form.username.errors.minLength"
-          class="error-message"
         >
           Минимальная длина 6 символов
-        </div>
+        </BaseInputError>
       </div>
       <div class="sign-up-form__input-container">
         <BaseInput
@@ -34,18 +34,16 @@
           :isOpened="true"
           @blur="form.email.blur"
         />
-        <div
-          v-if="form.email.touched && form.email.errors.required"
-          class="error-message"
-        >
+
+        <BaseInputError v-if="form.email.touched && form.email.errors.required">
           Поле должно быть заполнено
-        </div>
-        <div
+        </BaseInputError>
+
+        <BaseInputError
           v-else-if="form.email.touched && form.email.errors.isEmail"
-          class="error-message"
         >
           Введите корректный email
-        </div>
+        </BaseInputError>
       </div>
       <div class="sign-up-form__input-container">
         <div>
@@ -65,18 +63,17 @@
           <ClosedEyeIcon v-else @click="handlePasswordVisility" />
         </div>
 
-        <div
+        <BaseInputError
           v-if="form.password.touched && form.password.errors.required"
-          class="error-message"
         >
           Поле должно быть заполнено
-        </div>
-        <div
+        </BaseInputError>
+
+        <BaseInputError
           v-else-if="form.password.touched && form.password.errors.minLength"
-          class="error-message"
         >
           Минимальная длина 6 символов
-        </div>
+        </BaseInputError>
       </div>
     </div>
     <div class="sign-up-form__button-container">
@@ -98,6 +95,7 @@ import { useForm } from "@/use/form";
 import { useRouter } from "vue-router";
 import FirebaseService from "@/services/FirebaseService";
 import BaseInput from "@/components/base/BaseInput.vue";
+import BaseInputError from "@/components/base/BaseInputError.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import OpenedEyeIcon from "@/assets/icons/OpenedEyeIcon.vue";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.vue";
@@ -133,6 +131,16 @@ const form = useForm({
   },
 });
 
+//очистка формы
+const cleanForm = () => {
+  for (let prop in form) {
+    if (form[prop].value !== undefined) {
+      form[prop].value = "";
+      form[prop].touched = false;
+    }
+  }
+};
+
 // метод при нажатии кнопки submit
 const submitForm = () => {
   FirebaseService.doCreateUserWithEmailAndPassword(
@@ -140,12 +148,11 @@ const submitForm = () => {
     form.password.value
   )
     .then(() => {
-      console.log("sign up success");
+      cleanForm();
       router.push("/");
     })
-    .catch((err) => {
-      console.log("sign up error");
-      console.log(err);
+    .catch((error) => {
+      console.log(error);
     });
 };
 
@@ -165,13 +172,6 @@ const handlePasswordVisility = () => {
 .button_disabled {
   opacity: 0.5 !important;
   cursor: not-allowed;
-}
-
-.error-message {
-  margin-top: 5px;
-  font-size: 13px;
-  color: red;
-  text-align: center;
 }
 
 .sign-up-form {

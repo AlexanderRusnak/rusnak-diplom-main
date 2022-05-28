@@ -10,8 +10,8 @@
 <script setup>
 import { ref } from "vue";
 import FirebaseService from "@/services/FirebaseService";
-import TheHeader from "@/components/base/TheHeader.vue";
-import TheNavigation from "@/components/base/TheNavigation.vue";
+import TheHeader from "@/components/the/TheHeader.vue";
+import TheNavigation from "@/components/the/TheNavigation.vue";
 
 const isLoggedIn = ref(true);
 

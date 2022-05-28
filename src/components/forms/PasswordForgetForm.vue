@@ -11,18 +11,16 @@
           :isOpened="true"
           @blur="form.email.blur"
         />
-        <div
-          v-if="form.email.touched && form.email.errors.required"
-          class="error-message"
-        >
+
+        <BaseInputError v-if="form.email.touched && form.email.errors.required">
           Поле должно быть заполнено
-        </div>
-        <div
+        </BaseInputError>
+
+        <BaseInputError
           v-else-if="form.email.touched && form.email.errors.isEmail"
-          class="error-message"
         >
           Введите корректный email
-        </div>
+        </BaseInputError>
       </div>
     </div>
     <div class="password-forget-form__button-container">
@@ -32,7 +30,7 @@
         :size="'large'"
         :disabled="!form.valid"
         :class="{ button_disabled: !form.valid }"
-        >зарегистрироваться</BaseButton
+        >сбросить пароль</BaseButton
       >
     </div>
   </div>
@@ -40,7 +38,9 @@
 
 <script setup>
 import { useForm } from "@/use/form";
+import FirebaseService from "@/services/FirebaseService";
 import BaseInput from "@/components/base/BaseInput.vue";
+import BaseInputError from "@/components/base/BaseInputError.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 
 // валидаторы
@@ -62,9 +62,25 @@ const form = useForm({
   },
 });
 
+//очистка формы
+const cleanForm = () => {
+  for (let prop in form) {
+    if (form[prop].value !== undefined) {
+      form[prop].value = "";
+      form[prop].touched = false;
+    }
+  }
+};
+
 // метод при нажатии кнопки submit
 const submitForm = () => {
-  console.log("Email: ", form.email.value);
+  FirebaseService.doPasswordReset(form.email.value)
+    .then(() => {
+      cleanForm();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 </script>
 
@@ -77,13 +93,6 @@ const submitForm = () => {
 .button_disabled {
   opacity: 0.5 !important;
   cursor: not-allowed;
-}
-
-.error-message {
-  margin-top: 5px;
-  font-size: 13px;
-  color: red;
-  text-align: center;
 }
 
 .password-forget-form {

@@ -35,7 +35,6 @@ const updateInput = () => {
 
 .input_opened {
   text-align: center;
-  // padding: 10px 29px;
   width: 284px;
   height: 42px;
   border-bottom: 1px solid #9f9f9f;

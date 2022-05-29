@@ -9,6 +9,7 @@
       <CategoriesTable
         class="categories__table"
         :categories="categories"
+        :search="search"
         @row-clicked="handleRowClicked"
       />
       <CategoriesModal
@@ -17,7 +18,6 @@
         :selected-object="selectedObject"
         @modal-closed="handleModalClose"
       />
-      <button @click="testFunc">test categories array</button>
     </div>
   </BaseContainer>
 </template>
@@ -30,10 +30,6 @@ import BaseContainer from "@/components/base/BaseContainer.vue";
 import CategoriesControlPanel from "@/components/tabs/controlPanels/CategoriesControlPanel.vue";
 import CategoriesTable from "@/components/tabs/tables/CategoriesTable.vue";
 import CategoriesModal from "@/components/tabs/modals/CategoriesModal.vue";
-
-const testFunc = () => {
-  console.log(categories.value);
-};
 
 // ! Init: Refs & Handlers
 const categories = ref([]);

@@ -21,7 +21,7 @@ import BaseButton from "@/components/base/BaseButton.vue";
 
 const props = defineProps(["search"]);
 
-const emit = defineEmits(["updateInput", "updateModalStatus"]);
+const emit = defineEmits(["updateSearch", "updateModalStatus"]);
 
 // ! Updates
 

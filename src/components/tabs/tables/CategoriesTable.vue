@@ -7,6 +7,7 @@
       :total="table.totalRecordCount"
       :sortable="table.sortable"
       :messages="table.messages"
+      :is-hide-paging="true"
       @do-search="doSearch"
       @is-finished="table.isLoading = false"
       @row-clicked="handleRowClicked"
@@ -20,7 +21,7 @@ import TableLite from "vue3-table-lite";
 
 const emit = defineEmits(["row-clicked"]);
 
-const props = defineProps(["categories"]);
+const props = defineProps(["categories", "search"]);
 
 // клик на строку таблицы
 const handleRowClicked = (rowData) => {
@@ -58,27 +59,39 @@ const table = reactive({
     sort: "asc",
   },
 });
+
+const filtCat = () => {
+  let filteredCategories = props.categories.filter((item) => {
+    return item.name.toLowerCase().startsWith(props.search.toLowerCase());
+  });
+
+  return filteredCategories;
+};
+
 /**
  * Search Event
  */
 const doSearch = (offset, limit, order, sort) => {
   table.isLoading = true;
-  setTimeout(() => {
-    table.isReSearch = offset == undefined ? true : false;
-    if (offset >= 10 || limit >= 20) {
-      limit = 20;
-    }
-    table.rows = props.categories;
-    table.totalRecordCount = 20;
-    table.sortable.order = order;
-    table.sortable.sort = sort;
-  }, 600);
+  table.isReSearch = offset == undefined ? true : false;
+  if (offset >= 10 || limit >= 20) {
+    limit = 20;
+  }
+  table.rows = filtCat();
+  table.totalRecordCount = 20;
+  table.sortable.order = order;
+  table.sortable.sort = sort;
 };
 // First get data
 doSearch(0, 10, "id", "asc");
 
 watch(
   () => props.categories,
+  () => doSearch(0, 10, "id", "asc")
+);
+
+watch(
+  () => props.search,
   () => doSearch(0, 10, "id", "asc")
 );
 </script>

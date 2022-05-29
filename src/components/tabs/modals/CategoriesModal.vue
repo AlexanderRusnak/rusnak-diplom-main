@@ -47,6 +47,13 @@
             отменить
           </BaseButton>
         </div>
+        <div
+          :hidden="!props.isFormatting"
+          @click="deleteCategory"
+          class="modal__delete"
+        >
+          удалить категорию
+        </div>
       </div>
     </BaseModal>
   </div>
@@ -118,6 +125,12 @@ const submitForm = () => {
   handleModalClose();
 };
 
+const deleteCategory = () => {
+  FirebaseService.category(`${props.selectedObject.id}`).remove();
+
+  handleModalClose();
+};
+
 watch(
   () => props.selectedObject,
   () => (form.categoryName.value = props.selectedObject.name)
@@ -157,6 +170,12 @@ watch(
     &:last-child {
       margin-top: 10px;
     }
+  }
+
+  &__delete {
+    margin-top: 30px;
+    text-align: center;
+    cursor: pointer;
   }
 }
 

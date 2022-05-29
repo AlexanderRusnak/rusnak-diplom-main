@@ -9,7 +9,7 @@
       placeholder="Поиск..."
     />
     <BaseButton @click="updateModalStatus" size="small-adaptive">
-      создать категорию
+      создать официанта
     </BaseButton>
   </div>
 </template>

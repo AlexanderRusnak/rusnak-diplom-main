@@ -21,7 +21,7 @@ import TableLite from "vue3-table-lite";
 
 const emit = defineEmits(["row-clicked"]);
 
-const props = defineProps(["categories", "search"]);
+const props = defineProps(["waiters", "search"]);
 
 // клик на строку таблицы
 const handleRowClicked = (rowData) => {
@@ -32,25 +32,12 @@ const handleRowClicked = (rowData) => {
 const table = reactive({
   isLoading: false,
   columns: [
-    // {
-    //   label: "ID",
-    //   field: "id",
-    //   width: "3%",
-    //   sortable: true,
-    //   isKey: true,
-    // },
     {
-      label: "Категории",
+      label: "Официанты",
       field: "name",
       width: "5%",
       sortable: false,
     },
-    // {
-    //   label: "Email",
-    //   field: "email",
-    //   width: "10%",
-    //   sortable: true,
-    // },
   ],
   rows: [],
   totalRecordCount: 0,
@@ -60,12 +47,16 @@ const table = reactive({
   },
 });
 
-const filterCategoriesBySearchQuery = () => {
-  let filteredCategories = props.categories.filter((item) => {
-    return item.name.toLowerCase().startsWith(props.search.toLowerCase());
-  });
+const filterWaitersBySearchQuery = () => {
+  let filteredWaiters = [];
 
-  return filteredCategories;
+  if (props.waiters) {
+    filteredWaiters = props.waiters.filter((item) => {
+      return item.name.toLowerCase().startsWith(props.search.toLowerCase());
+    });
+  }
+
+  return filteredWaiters;
 };
 
 /**
@@ -77,7 +68,7 @@ const doSearch = (offset, limit, order, sort) => {
   if (offset >= 10 || limit >= 20) {
     limit = 20;
   }
-  table.rows = filterCategoriesBySearchQuery();
+  table.rows = filterWaitersBySearchQuery();
   table.totalRecordCount = 20;
   table.sortable.order = order;
   table.sortable.sort = sort;
@@ -86,7 +77,7 @@ const doSearch = (offset, limit, order, sort) => {
 doSearch(0, 10, "id", "asc");
 
 watch(
-  () => props.categories,
+  () => props.waiters,
   () => doSearch(0, 10, "id", "asc")
 );
 

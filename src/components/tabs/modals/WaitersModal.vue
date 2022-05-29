@@ -9,7 +9,7 @@
         <div class="modal__input-container">
           <BaseInput
             v-model="form.waiterName.value"
-            placeholder="Название категории"
+            placeholder="Имя официанта"
             type="text"
             :isOpened="false"
             :class="{

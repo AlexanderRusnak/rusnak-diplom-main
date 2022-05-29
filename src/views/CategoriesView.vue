@@ -38,9 +38,13 @@ onMounted(() => {
   FirebaseService.categories().on("value", (snapshot) => {
     const categoriesObject = snapshot.val();
 
-    const categoriesList = Object.keys(categoriesObject).map((key) => ({
-      ...categoriesObject[key],
-    }));
+    let categoriesList = [];
+
+    if (categoriesObject) {
+      categoriesList = Object.keys(categoriesObject).map((key) => ({
+        ...categoriesObject[key],
+      }));
+    }
 
     categories.value = categoriesList;
   });

@@ -50,7 +50,7 @@
         </div>
         <div class="modal__input-container">
           <div class="modal__select-label">
-            <div>Категория</div>
+            <div>Категория:</div>
             <BaseSelect
               v-model="form.positionCategory.value"
               :class="{
@@ -199,7 +199,11 @@ const deletePosition = () => {
 
 watch(
   () => props.selectedObject,
-  () => (form.positionName.value = props.selectedObject.name)
+  () => {
+    form.positionName.value = props.selectedObject.name;
+    form.positionPrice.value = props.selectedObject.price;
+    form.positionCategory.value = props.selectedObject.category;
+  }
 );
 </script>
 

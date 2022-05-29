@@ -8,7 +8,7 @@
       type="text"
       placeholder="Поиск..."
     />
-    <BaseButton @click="updateFormStatus" size="small-adaptive"
+    <BaseButton @click="updateModalStatus" size="small-adaptive"
       >создать категорию</BaseButton
     >
   </div>
@@ -21,7 +21,7 @@ import BaseButton from "@/components/base/BaseButton.vue";
 
 const props = defineProps(["search"]);
 
-const emit = defineEmits(["updateInput", "updateFormStatus"]);
+const emit = defineEmits(["updateInput", "updateModalStatus"]);
 
 // ! Updates
 
@@ -29,8 +29,9 @@ const updateSearch = () => {
   emit("updateSearch", event.target.value);
 };
 
-const updateFormStatus = () => {
-  emit("updateFormStatus");
+const updateModalStatus = () => {
+  console.log("клик на создать категорию");
+  emit("updateModalStatus");
 };
 </script>
 

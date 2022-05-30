@@ -75,6 +75,31 @@
             Поле должно быть заполнено
           </BaseInputError>
         </div>
+        <div class="modal__input-container">
+          <div class="modal__select-label">
+            <div>Тип:</div>
+            <BaseSelect
+              v-model="form.positionType.value"
+              :class="{
+                modal__select: true,
+                invalid: !form.positionType.valid && form.positionType.touched,
+              }"
+              @blur="form.positionType.blur"
+            >
+              <option v-for="type in props.positionTypes" :key="type.id">
+                {{ type }}
+              </option>
+            </BaseSelect>
+          </div>
+
+          <BaseInputError
+            v-if="
+              form.positionType.touched && form.positionType.errors.required
+            "
+          >
+            Поле должно быть заполнено
+          </BaseInputError>
+        </div>
         <div class="modal__buttons">
           <BaseButton
             @click="submitForm"
@@ -122,6 +147,7 @@ const props = defineProps([
   "isFormatting",
   "selectedObject",
   "categories",
+  "positionTypes",
 ]);
 
 const emit = defineEmits(["modal-closed"]);
@@ -150,6 +176,10 @@ const form = useForm({
     value: "",
     validators: { required },
   },
+  positionType: {
+    value: "",
+    validators: { required },
+  },
 });
 
 //очистка формы
@@ -171,6 +201,7 @@ const submitForm = () => {
       name: form.positionName.value,
       price: form.positionPrice.value,
       category: form.positionCategory.value,
+      type: form.positionType.value,
     };
 
     FirebaseService.position(position.id).set(position);
@@ -184,6 +215,7 @@ const submitForm = () => {
     changedPosition.name = form.positionName.value;
     changedPosition.price = form.positionPrice.value;
     changedPosition.category = form.positionCategory.value;
+    changedPosition.type = form.positionType.value;
 
     FirebaseService.position(`${changedPosition.id}`).set(changedPosition);
   }
@@ -200,9 +232,12 @@ const deletePosition = () => {
 watch(
   () => props.selectedObject,
   () => {
-    form.positionName.value = props.selectedObject.name;
-    form.positionPrice.value = props.selectedObject.price;
-    form.positionCategory.value = props.selectedObject.category;
+    if (props.selectedObject !== null) {
+      form.positionName.value = props.selectedObject.name;
+      form.positionPrice.value = props.selectedObject.price;
+      form.positionCategory.value = props.selectedObject.category;
+      form.positionType.value = props.selectedObject.type;
+    }
   }
 );
 </script>

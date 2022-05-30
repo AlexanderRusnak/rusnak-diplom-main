@@ -21,7 +21,7 @@ import TableLite from "vue3-table-lite";
 
 const emit = defineEmits(["row-clicked"]);
 
-const props = defineProps(["positions", "search"]);
+const props = defineProps(["positions", "search", "positionTypeFilter"]);
 
 // клик на строку таблицы
 const handleRowClicked = (rowData) => {
@@ -64,9 +64,16 @@ const filterPositionsBySearchQuery = () => {
   let filteredPositions = [];
 
   if (props.positions) {
-    filteredPositions = props.positions.filter((item) => {
-      return item.name.toLowerCase().startsWith(props.search.toLowerCase());
-    });
+    filteredPositions = props.positions
+      .filter((item) => {
+        return item.name.toLowerCase().startsWith(props.search.toLowerCase());
+      })
+      .filter((item) => {
+        return (
+          props.positionTypeFilter === "Все типы" ||
+          item.type === props.positionTypeFilter
+        );
+      });
   }
 
   return filteredPositions;
@@ -96,6 +103,11 @@ watch(
 
 watch(
   () => props.search,
+  () => doSearch(0, 10, "id", "asc")
+);
+
+watch(
+  () => props.positionTypeFilter,
   () => doSearch(0, 10, "id", "asc")
 );
 </script>

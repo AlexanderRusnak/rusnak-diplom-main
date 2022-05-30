@@ -71,6 +71,7 @@ const handleModalOpen = () => {
 const handleModalClose = () => {
   isModalShown.value = false;
   isFormatting.value = false;
+  selectedObject.value = null;
 };
 
 const selectedObject = ref(null);

@@ -3,6 +3,9 @@
     <div class="positions">
       <PositionsControlPanel
         :search="search"
+        :position-type-filter="positionTypeFilter"
+        :position-types="positionTypes"
+        @updatePositionTypeFilter="handlePositionTypeFilterChanges"
         @updateSearch="handleSearchChanges"
         @updateModalStatus="handleModalOpen"
       />
@@ -10,6 +13,7 @@
         class="positions__table"
         :positions="positions"
         :search="search"
+        :position-type-filter="positionTypeFilter"
         @row-clicked="handleRowClicked"
       />
       <PositionsModal
@@ -17,6 +21,7 @@
         :is-formatting="isFormatting"
         :selected-object="selectedObject"
         :categories="categories"
+        :position-types="positionTypes"
         @modal-closed="handleModalClose"
       />
     </div>
@@ -79,6 +84,12 @@ const handleSearchChanges = (newValue) => {
   search.value = newValue;
 };
 
+const positionTypeFilter = ref("Все типы");
+
+const handlePositionTypeFilterChanges = (newValue) => {
+  positionTypeFilter.value = newValue;
+};
+
 const isModalShown = ref(false);
 
 const handleModalOpen = () => {
@@ -88,6 +99,7 @@ const handleModalOpen = () => {
 const handleModalClose = () => {
   isModalShown.value = false;
   isFormatting.value = false;
+  selectedObject.value = null;
 };
 
 const selectedObject = ref(null);
@@ -97,6 +109,8 @@ const handleRowClicked = (rowData) => {
   isModalShown.value = true;
   isFormatting.value = true;
 };
+
+const positionTypes = ref(["Блюдо", "Товар"]);
 
 // ! Auth Check
 

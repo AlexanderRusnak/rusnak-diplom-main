@@ -133,7 +133,11 @@ const deleteCategory = () => {
 
 watch(
   () => props.selectedObject,
-  () => (form.categoryName.value = props.selectedObject.name)
+  () => {
+    if (props.selectedObject !== null) {
+      form.categoryName.value = props.selectedObject.name;
+    }
+  }
 );
 </script>
 

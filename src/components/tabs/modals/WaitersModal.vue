@@ -131,7 +131,11 @@ const deleteWaiter = () => {
 
 watch(
   () => props.selectedObject,
-  () => (form.waiterName.value = props.selectedObject.name)
+  () => {
+    if (props.selectedObject !== null) {
+      form.waiterName.value = props.selectedObject.name;
+    }
+  }
 );
 </script>
 

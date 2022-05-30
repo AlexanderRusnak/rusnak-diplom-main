@@ -21,7 +21,12 @@ import TableLite from "vue3-table-lite";
 
 const emit = defineEmits(["row-clicked"]);
 
-const props = defineProps(["positions", "search", "orderStatusFilter"]);
+const props = defineProps([
+  "positions",
+  "orders",
+  "search",
+  "orderStatusFilter",
+]);
 
 // клик на строку таблицы
 const handleRowClicked = (rowData) => {

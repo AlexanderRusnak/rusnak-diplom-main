@@ -13,6 +13,7 @@
       />
       <OrdersTable
         class="positions__table"
+        :orders="orders"
         :positions="positions"
         :search="search"
         :order-status-filter="orderStatusFilter"
@@ -39,10 +40,25 @@ import OrdersTable from "@/components/tabs/tables/OrdersTable.vue";
 import OrdersModal from "@/components/tabs/modals/OrdersModal.vue";
 
 // ! Init: Refs & Handlers
+const orders = ref([]);
 const positions = ref([]);
 const waiters = ref([]);
 
 onMounted(() => {
+  FirebaseService.orders().on("value", (snapshot) => {
+    const ordersObject = snapshot.val();
+
+    let ordersList = [];
+
+    if (ordersObject) {
+      ordersList = Object.keys(ordersObject).map((key) => ({
+        ...ordersObject[key],
+      }));
+    }
+
+    positions.value = ordersList;
+  });
+
   FirebaseService.positions().on("value", (snapshot) => {
     const positionsObject = snapshot.val();
 
@@ -73,6 +89,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  FirebaseService.orders().off();
   FirebaseService.positions().off();
   FirebaseService.waiters().off();
 });

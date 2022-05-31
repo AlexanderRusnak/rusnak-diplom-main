@@ -20,6 +20,7 @@
         v-for="item in props.orderContent"
         :order-item="item"
         :key="item.id"
+        :positions="props.positions"
         @content-position-changed="handleContentPositionChanges"
         @content-amount-changed="handleContentAmountChanges"
         @content-position-delete="handlePositionDelete"
@@ -42,7 +43,7 @@ import { defineProps, defineEmits } from "vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import OrderContentItem from "@/components/tabs/contentItems/OrderContentItem.vue";
 
-const props = defineProps(["orderContent"]);
+const props = defineProps(["orderContent", "positions"]);
 
 const emit = defineEmits([
   "content-position-changed",

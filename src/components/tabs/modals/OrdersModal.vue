@@ -81,6 +81,7 @@
           @content-position-changed="handleContentPositionChanges"
           @content-amount-changed="handleContentAmountChanges"
           :order-content="orderContent"
+          :positions="props.positions"
         />
 
         <div class="modal__buttons">
@@ -92,7 +93,7 @@
             }"
             :isWhite="false"
             :size="'large'"
-            :disabled="!form.valid"
+            :disabled="!form.valid || !isContentValid"
           >
             сохранить
           </BaseButton>
@@ -149,6 +150,10 @@ const handleModalClose = () => {
 const orderContent = ref([{ id: 1, position: "", amount: 0, sum: 0 }]);
 
 const orderContentIDCounter = ref(1);
+
+if (props.selectedObject) {
+  orderContentIDCounter.value = ref(props.selectedObject.content.length);
+}
 
 const handleContentItemAddition = () => {
   orderContentIDCounter.value += 1;
@@ -244,12 +249,24 @@ const submitForm = () => {
   if (!props.isFormatting) {
     console.log("Создание заказа");
 
+    let totalSum = 0;
+
+    orderContent.value.map((item) => {
+      totalSum +=
+        props?.positions?.find((posItem) => {
+          return posItem?.name == item?.position;
+        })?.price * item?.amount;
+    });
+
+    console.log(totalSum);
+
     let order = {
       id: new Date().getTime().toString(),
       table: form.orderTable.value,
       guestsNumber: form.orderGuestsNumber.value,
       waiter: form.orderWaiter.value,
       content: orderContent.value,
+      sum: totalSum,
     };
 
     FirebaseService.order(order.id).set(order);
@@ -260,10 +277,20 @@ const submitForm = () => {
 
     Object.assign(changedOrder, props.selectedObject);
 
+    let totalSum = 0;
+
+    orderContent.value.map((item) => {
+      totalSum +=
+        props?.positions?.find((posItem) => {
+          return posItem?.name == item?.position;
+        })?.price * item?.amount;
+    });
+
     changedOrder.table = form.orderTable.value;
     changedOrder.guestsNumber = form.orderGuestsNumber.value;
     changedOrder.waiter = form.orderWaiter.value;
     changedOrder.content = orderContent.value;
+    changedOrder.sum = totalSum;
 
     FirebaseService.order(`${changedOrder.id}`).set(changedOrder);
   }

@@ -10,7 +10,13 @@
         @input="handleContentPositionChanges"
         placeholder="Позиция"
         class="field__input field__input_position"
+        list="positionsList"
       />
+      <datalist id="positionsList">
+        <option v-for="position in props.positions" :key="position.id">
+          {{ position.name }}
+        </option>
+      </datalist>
     </div>
     <div class="field field_amount content-item__field">
       <BaseInput
@@ -21,7 +27,7 @@
       />
     </div>
     <div class="field field_sum content-item__field">
-      <div class="field__sum">12345₽</div>
+      <div class="field__sum">{{ getPositionSum() }}₽</div>
     </div>
     <div class="field field_cross content-item__field">
       <div
@@ -39,12 +45,25 @@ import { ref, defineProps, defineEmits } from "vue";
 // import BaseButton from "@/components/base/BaseButton.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
 
-const props = defineProps(["orderItem"]);
+const props = defineProps(["orderItem", "positions"]);
 const emit = defineEmits([
   "content-position-changed",
   "content-amount-changed",
   "content-position-delete",
 ]);
+
+const getPositionSum = () => {
+  let sum =
+    props?.positions?.find((item) => {
+      return item?.name == props?.orderItem?.position;
+    })?.price * props?.orderItem?.amount;
+
+  if (sum) {
+    return sum;
+  } else {
+    return 0;
+  }
+};
 
 const handleContentPositionChanges = () => {
   emit("content-position-changed", props.orderItem.id, event.target.value);

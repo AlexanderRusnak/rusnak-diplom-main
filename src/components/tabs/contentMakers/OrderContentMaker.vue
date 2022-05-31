@@ -82,8 +82,6 @@ const handlePositionAddition = () => {
     }
   });
 
-  console.log(isAdditionValid, "RESULT");
-
   if (isAdditionValid) {
     emit("content-item-add");
   }

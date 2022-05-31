@@ -54,7 +54,6 @@
 
 <script setup>
 import { ref, defineProps, defineEmits } from "vue";
-// import BaseButton from "@/components/base/BaseButton.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
 
 const props = defineProps(["orderItem", "positions", "selectedObject"]);

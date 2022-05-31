@@ -196,8 +196,6 @@ const cleanForm = () => {
 
 const submitForm = () => {
   if (!props.isFormatting) {
-    console.log("Создание позиции");
-
     let position = {
       id: new Date().getTime().toString(),
       name: form.positionName.value,
@@ -208,8 +206,6 @@ const submitForm = () => {
 
     FirebaseService.position(position.id).set(position);
   } else {
-    console.log("Редактирование позиции");
-
     let changedPosition = {};
 
     Object.assign(changedPosition, props.selectedObject);

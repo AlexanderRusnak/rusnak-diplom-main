@@ -32,25 +32,12 @@ const handleRowClicked = (rowData) => {
 const table = reactive({
   isLoading: false,
   columns: [
-    // {
-    //   label: "ID",
-    //   field: "id",
-    //   width: "3%",
-    //   sortable: true,
-    //   isKey: true,
-    // },
     {
       label: "Категории",
       field: "name",
       width: "5%",
       sortable: false,
     },
-    // {
-    //   label: "Email",
-    //   field: "email",
-    //   width: "10%",
-    //   sortable: true,
-    // },
   ],
   rows: [],
   totalRecordCount: 0,

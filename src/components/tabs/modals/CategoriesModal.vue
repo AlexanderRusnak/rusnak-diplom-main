@@ -103,8 +103,6 @@ const cleanForm = () => {
 
 const submitForm = () => {
   if (!props.isFormatting) {
-    console.log("Создание категории");
-
     let category = {
       id: new Date().getTime().toString(),
       name: form.categoryName.value,
@@ -112,8 +110,6 @@ const submitForm = () => {
 
     FirebaseService.category(category.id).set(category);
   } else {
-    console.log("Редактирование категории");
-
     let changedCategory = {};
 
     Object.assign(changedCategory, props.selectedObject);

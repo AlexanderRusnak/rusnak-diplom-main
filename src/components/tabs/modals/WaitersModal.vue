@@ -101,8 +101,6 @@ const cleanForm = () => {
 
 const submitForm = () => {
   if (!props.isFormatting) {
-    console.log("Создание официанта");
-
     let waiter = {
       id: new Date().getTime().toString(),
       name: form.waiterName.value,
@@ -110,8 +108,6 @@ const submitForm = () => {
 
     FirebaseService.waiter(waiter.id).set(waiter);
   } else {
-    console.log("Редактирование официанта");
-
     let changedWaiter = {};
 
     Object.assign(changedWaiter, props.selectedObject);

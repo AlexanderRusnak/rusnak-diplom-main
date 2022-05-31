@@ -89,21 +89,12 @@ const filterOrders = () => {
           .startsWith(props.search.toLowerCase());
       })
       .filter((item) => {
-        console.log(
-          props.orderStatusFilter === "Все заказы" ||
-            item.status === props.orderStatusFilter
-        );
         return (
           props.orderStatusFilter === "Все заказы" ||
           item.status === props.orderStatusFilter
         );
       })
       .filter((item) => {
-        console.log(
-          props.orderWaiterFilter === "Все официанты" ||
-            item.waiter === props.orderWaiterFilter
-        );
-
         return (
           props.orderWaiterFilter === "Все официанты" ||
           item.waiter === props.orderWaiterFilter

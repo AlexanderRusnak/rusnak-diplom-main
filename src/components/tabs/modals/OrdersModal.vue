@@ -88,7 +88,6 @@
           </BaseInputError>
         </div>
 
-        <!-- TODO -->
         <OrderContentMaker
           @content-item-add="handleContentItemAddition"
           @content-position-delete="handleContentItemDeletion"
@@ -298,8 +297,6 @@ const cleanForm = () => {
 
 const submitForm = () => {
   if (!props.isFormatting) {
-    console.log("Создание заказа");
-
     let totalSum = 0;
 
     orderContent.value.map((item) => {
@@ -308,8 +305,6 @@ const submitForm = () => {
           return posItem?.name == item?.position;
         })?.price * item?.amount;
     });
-
-    console.log(totalSum);
 
     let statusAlias = isStatusClosed.value == true ? "Закрытый" : "Открытый";
 
@@ -325,8 +320,6 @@ const submitForm = () => {
 
     FirebaseService.order(order.id).set(order);
   } else {
-    console.log("Редактирование заказа");
-
     let changedOrder = {};
 
     Object.assign(changedOrder, props.selectedObject);

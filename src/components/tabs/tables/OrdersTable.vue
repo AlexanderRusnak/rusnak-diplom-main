@@ -80,21 +80,35 @@ const table = reactive({
 const filterOrders = () => {
   let filteredOrders = [];
 
-  console.log(props.orders);
-
   if (props.orders.length > 0) {
-    filteredOrders = props.orders.filter((item) => {
-      return item.table
-        .toString()
-        .toLowerCase()
-        .startsWith(props.search.toLowerCase());
-    });
-    // .filter((item) => {
-    //   return (
-    //     props.orderStatusFilter === "Все заказы" ||
-    //     item.status === props.orderStatusFilter
-    //   );
-    // });
+    filteredOrders = props.orders
+      .filter((item) => {
+        return item.table
+          .toString()
+          .toLowerCase()
+          .startsWith(props.search.toLowerCase());
+      })
+      .filter((item) => {
+        console.log(
+          props.orderStatusFilter === "Все заказы" ||
+            item.status === props.orderStatusFilter
+        );
+        return (
+          props.orderStatusFilter === "Все заказы" ||
+          item.status === props.orderStatusFilter
+        );
+      })
+      .filter((item) => {
+        console.log(
+          props.orderWaiterFilter === "Все официанты" ||
+            item.waiter === props.orderWaiterFilter
+        );
+
+        return (
+          props.orderWaiterFilter === "Все официанты" ||
+          item.waiter === props.orderWaiterFilter
+        );
+      });
   }
 
   return filteredOrders;
@@ -130,6 +144,11 @@ watch(
 
 watch(
   () => props.orderStatusFilter,
+  () => doSearch(0, 10, "idf", "asc")
+);
+
+watch(
+  () => props.orderWaiterFilter,
   () => doSearch(0, 10, "idf", "asc")
 );
 </script>

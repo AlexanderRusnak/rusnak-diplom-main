@@ -46,6 +46,7 @@ const handleModalClose = () => {
   position: relative;
   display: flex;
   flex-direction: column;
+  max-height: 90%;
   margin: 0 1rem;
   padding: 2rem;
   border: 1px solid #e2e8f0;

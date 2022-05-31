@@ -8,6 +8,7 @@
       <div class="modal__content">
         <div class="modal__input-container">
           <BaseInput
+            title="Имя"
             v-model="form.waiterName.value"
             placeholder="Имя официанта"
             type="text"

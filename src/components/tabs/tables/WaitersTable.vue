@@ -52,7 +52,7 @@ const filterWaitersBySearchQuery = () => {
 
   if (props.waiters) {
     filteredWaiters = props.waiters.filter((item) => {
-      return item.name.toLowerCase().startsWith(props.search.toLowerCase());
+      return item.name.toLowerCase().includes(props.search.toLowerCase());
     });
   }
 

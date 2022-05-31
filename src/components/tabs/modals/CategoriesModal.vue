@@ -8,6 +8,7 @@
       <div class="modal__content">
         <div class="modal__input-container">
           <BaseInput
+            title="Название"
             v-model="form.categoryName.value"
             placeholder="Название категории"
             type="text"

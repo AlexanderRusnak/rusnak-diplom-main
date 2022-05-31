@@ -62,7 +62,7 @@ const table = reactive({
 
 const filterCategoriesBySearchQuery = () => {
   let filteredCategories = props.categories.filter((item) => {
-    return item.name.toLowerCase().startsWith(props.search.toLowerCase());
+    return item.name.toLowerCase().includes(props.search.toLowerCase());
   });
 
   return filteredCategories;

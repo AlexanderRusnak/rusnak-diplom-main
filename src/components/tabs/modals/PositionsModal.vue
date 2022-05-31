@@ -8,6 +8,7 @@
       <div class="modal__content">
         <div class="modal__input-container">
           <BaseInput
+            title="Название"
             v-model="form.positionName.value"
             placeholder="Название позиции"
             type="text"
@@ -29,6 +30,7 @@
         </div>
         <div class="modal__input-container">
           <BaseInput
+            title="Цена"
             v-model="form.positionPrice.value"
             placeholder="Цена позиции"
             type="text"

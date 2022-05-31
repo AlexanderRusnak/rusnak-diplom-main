@@ -21,10 +21,15 @@
         :order-item="item"
         :key="item.id"
         :positions="props.positions"
+        :selected-object="props.selectedObject"
         @content-position-changed="handleContentPositionChanges"
         @content-amount-changed="handleContentAmountChanges"
         @content-position-delete="handlePositionDelete"
       />
+    </div>
+    <div v-if="props.selectedObject" class="content-maker__sum">
+      К оплате:
+      {{ props?.selectedObject?.sum + "₽" }}
     </div>
     <BaseButton
       @click="handlePositionAddition"
@@ -32,6 +37,10 @@
       :isWhite="true"
       type="button"
       size="xxl"
+      v-if="
+        props.selectedObject !== undefined &&
+        props.selectedObject?.status !== 'Закрытый'
+      "
     >
       добавить позицию
     </BaseButton>
@@ -43,7 +52,7 @@ import { defineProps, defineEmits } from "vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import OrderContentItem from "@/components/tabs/contentItems/OrderContentItem.vue";
 
-const props = defineProps(["orderContent", "positions"]);
+const props = defineProps(["orderContent", "positions", "selectedObject"]);
 
 const emit = defineEmits([
   "content-position-changed",
@@ -133,6 +142,11 @@ const handlePositionAddition = () => {
 
   &__button {
     margin-top: 15px;
+  }
+
+  &__sum {
+    margin-top: 15px;
+    font-weight: 500;
   }
 }
 </style>

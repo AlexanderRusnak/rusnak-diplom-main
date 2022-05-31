@@ -7,7 +7,7 @@
         class="control-panel__search-input"
         :isOpened="false"
         type="text"
-        placeholder="Поиск..."
+        placeholder="Поиск по столу..."
       />
 
       <BaseSelect
@@ -16,8 +16,8 @@
         class="control-panel__select"
       >
         <option value="Все заказы" selected="selected">Все заказы</option>
-        <option>Открытые</option>
-        <option>Закрытые</option>
+        <option>Открытый</option>
+        <option>Закрытый</option>
       </BaseSelect>
 
       <BaseSelect

@@ -8,6 +8,11 @@
       <div class="modal__content">
         <div class="modal__input-container">
           <BaseInput
+            title="Стол"
+            :disabled="
+              props.selectedObject !== undefined &&
+              props.selectedObject?.status == 'Закрытый'
+            "
             v-model="form.orderTable.value"
             placeholder="Название/номер стола"
             type="text"
@@ -28,6 +33,11 @@
 
         <div class="modal__input-container">
           <BaseInput
+            title="Количество гостей"
+            :disabled="
+              props.selectedObject !== undefined &&
+              props.selectedObject?.status == 'Закрытый'
+            "
             v-model="form.orderGuestsNumber.value"
             placeholder="Количество гостей"
             type="text"
@@ -59,6 +69,10 @@
                 modal__select: true,
                 invalid: !form.orderWaiter.valid && form.orderWaiter.touched,
               }"
+              :disabled="
+                props.selectedObject !== undefined &&
+                props.selectedObject?.status == 'Закрытый'
+              "
               @blur="form.orderWaiter.blur"
             >
               <option v-for="waiter in props.waiters" :key="waiter.id">
@@ -82,10 +96,35 @@
           @content-amount-changed="handleContentAmountChanges"
           :order-content="orderContent"
           :positions="props.positions"
+          :selected-object="selectedObject"
         />
+
+        <div class="modal__checkbox-container">
+          <input
+            v-if="
+              props.selectedObject !== undefined &&
+              props.selectedObject?.status !== 'Закрытый'
+            "
+            type="checkbox"
+            v-model="isStatusClosed"
+          />
+          <div
+            v-if="
+              props.selectedObject !== undefined &&
+              props.selectedObject?.status !== 'Закрытый'
+            "
+            class="modal__checkbox-text"
+          >
+            Изменить статус заказа на закрытый
+          </div>
+        </div>
 
         <div class="modal__buttons">
           <BaseButton
+            v-if="
+              props.selectedObject !== undefined &&
+              props.selectedObject?.status !== 'Закрытый'
+            "
             @click="submitForm"
             :class="{
               modal__button: true,
@@ -104,13 +143,22 @@
             :isWhite="true"
             :size="'large'"
           >
-            отменить
+            {{
+              props.selectedObject !== undefined &&
+              props.selectedObject?.status == "Закрытый"
+                ? "закрыть"
+                : "отменить"
+            }}
           </BaseButton>
         </div>
         <div
           :hidden="!props.isFormatting"
           @click="deleteOrder"
           class="modal__delete"
+          v-if="
+            props.selectedObject !== undefined &&
+            props.selectedObject?.status == 'Закрытый'
+          "
         >
           удалить заказ
         </div>
@@ -233,6 +281,8 @@ const form = useForm({
   },
 });
 
+const isStatusClosed = ref(false);
+
 //очистка формы
 const cleanForm = () => {
   for (let prop in form) {
@@ -243,6 +293,7 @@ const cleanForm = () => {
   }
 
   orderContent.value = [{ id: 1, position: "", amount: 0, sum: 0 }];
+  isStatusClosed.value = false;
 };
 
 const submitForm = () => {
@@ -260,12 +311,15 @@ const submitForm = () => {
 
     console.log(totalSum);
 
+    let statusAlias = isStatusClosed.value == true ? "Закрытый" : "Открытый";
+
     let order = {
       id: new Date().getTime().toString(),
       table: form.orderTable.value,
       guestsNumber: form.orderGuestsNumber.value,
       waiter: form.orderWaiter.value,
       content: orderContent.value,
+      status: statusAlias,
       sum: totalSum,
     };
 
@@ -286,10 +340,17 @@ const submitForm = () => {
         })?.price * item?.amount;
     });
 
+    let statusAlias = isStatusClosed.value == true ? "Закрытый" : "Открытый";
+
+    if (changedOrder.status == "Закрытый") {
+      statusAlias = "Закрытый";
+    }
+
     changedOrder.table = form.orderTable.value;
     changedOrder.guestsNumber = form.orderGuestsNumber.value;
     changedOrder.waiter = form.orderWaiter.value;
     changedOrder.content = orderContent.value;
+    changedOrder.status = statusAlias;
     changedOrder.sum = totalSum;
 
     FirebaseService.order(`${changedOrder.id}`).set(changedOrder);
@@ -327,6 +388,7 @@ watch(
 
   &__content {
     margin-top: 30px;
+    overflow-y: auto;
   }
 
   &__input {
@@ -352,6 +414,20 @@ watch(
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
+    }
+  }
+
+  &__checkbox {
+    &-container {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &-text {
+      margin-left: 10px;
     }
   }
 

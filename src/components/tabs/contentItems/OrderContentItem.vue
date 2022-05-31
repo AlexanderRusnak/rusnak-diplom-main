@@ -6,6 +6,10 @@
   >
     <div class="field field_position content-item__field">
       <BaseInput
+        :disabled="
+          props.selectedObject !== undefined &&
+          props.selectedObject?.status == 'Закрытый'
+        "
         :value="props.orderItem.position"
         @input="handleContentPositionChanges"
         placeholder="Позиция"
@@ -20,6 +24,10 @@
     </div>
     <div class="field field_amount content-item__field">
       <BaseInput
+        :disabled="
+          props.selectedObject !== undefined &&
+          props.selectedObject?.status == 'Закрытый'
+        "
         :value="props.orderItem.amount"
         @input="handleContentAmountChanges"
         placeholder="0"
@@ -31,6 +39,10 @@
     </div>
     <div class="field field_cross content-item__field">
       <div
+        v-if="
+          props.selectedObject !== undefined &&
+          props.selectedObject?.status !== 'Закрытый'
+        "
         @click="handlePositionDelete"
         :class="{ field__cross: true, field__cross_white: isCrossVisible }"
       >
@@ -45,7 +57,7 @@ import { ref, defineProps, defineEmits } from "vue";
 // import BaseButton from "@/components/base/BaseButton.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
 
-const props = defineProps(["orderItem", "positions"]);
+const props = defineProps(["orderItem", "positions", "selectedObject"]);
 const emit = defineEmits([
   "content-position-changed",
   "content-amount-changed",

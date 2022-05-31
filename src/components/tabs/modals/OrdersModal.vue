@@ -75,12 +75,21 @@
         </div>
 
         <!-- TODO -->
-        <OrderContentMaker :order-content="orderContent" />
+        <OrderContentMaker
+          @content-item-add="handleContentItemAddition"
+          @content-position-delete="handleContentItemDeletion"
+          @content-position-changed="handleContentPositionChanges"
+          @content-amount-changed="handleContentAmountChanges"
+          :order-content="orderContent"
+        />
 
         <div class="modal__buttons">
           <BaseButton
             @click="submitForm"
-            :class="{ modal__button: true, button_disabled: !form.valid }"
+            :class="{
+              modal__button: true,
+              button_disabled: !form.valid || !isContentValid,
+            }"
             :isWhite="false"
             :size="'large'"
             :disabled="!form.valid"
@@ -102,7 +111,7 @@
           @click="deleteOrder"
           class="modal__delete"
         >
-          удалить позицию
+          удалить заказ
         </div>
       </div>
     </BaseModal>
@@ -110,7 +119,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch } from "vue";
+import { ref, defineProps, defineEmits, watch, computed } from "vue";
 import { useForm } from "@/use/form";
 import FirebaseService from "@/services/FirebaseService";
 import BaseModal from "@/components/base/BaseModal.vue";
@@ -138,6 +147,66 @@ const handleModalClose = () => {
 
 // содержимое заказа
 const orderContent = ref([{ id: 1, position: "", amount: 0, sum: 0 }]);
+
+const orderContentIDCounter = ref(1);
+
+const handleContentItemAddition = () => {
+  orderContentIDCounter.value += 1;
+
+  orderContent.value = [
+    ...orderContent.value,
+    {
+      id: orderContentIDCounter.value,
+      position: "",
+      amount: 0,
+      sum: 0,
+    },
+  ];
+};
+
+const handleContentItemDeletion = (deletedItemID) => {
+  if (orderContent.value.length > 1) {
+    orderContent.value = orderContent.value.filter((item) => {
+      return item.id !== deletedItemID;
+    });
+  }
+};
+
+const handleContentPositionChanges = (changedPositionID, newPosition) => {
+  orderContent.value.map((item) => {
+    if (item.id == changedPositionID) {
+      item.position = newPosition;
+      return item;
+    } else {
+      return item;
+    }
+  });
+};
+
+const handleContentAmountChanges = (changedPositionID, newAmount) => {
+  orderContent.value.map((item) => {
+    if (item.id == changedPositionID) {
+      item.amount = newAmount;
+      return item;
+    } else {
+      return item;
+    }
+  });
+};
+
+// валидация содержимого заказа
+const isContentValid = computed(() => {
+  let isAdditionValid = true;
+
+  // валидация всех позиций в заказе
+  orderContent.value.forEach((item) => {
+    if (!item.position || item.amount <= 0) {
+      isAdditionValid = false;
+    }
+  });
+
+  return isAdditionValid;
+});
 
 // валидаторы
 const required = (value) => !!value;
@@ -167,6 +236,8 @@ const cleanForm = () => {
       form[prop].touched = false;
     }
   }
+
+  orderContent.value = [{ id: 1, position: "", amount: 0, sum: 0 }];
 };
 
 const submitForm = () => {
@@ -178,6 +249,7 @@ const submitForm = () => {
       table: form.orderTable.value,
       guestsNumber: form.orderGuestsNumber.value,
       waiter: form.orderWaiter.value,
+      content: orderContent.value,
     };
 
     FirebaseService.order(order.id).set(order);
@@ -191,6 +263,7 @@ const submitForm = () => {
     changedOrder.table = form.orderTable.value;
     changedOrder.guestsNumber = form.orderGuestsNumber.value;
     changedOrder.waiter = form.orderWaiter.value;
+    changedOrder.content = orderContent.value;
 
     FirebaseService.order(`${changedOrder.id}`).set(changedOrder);
   }
@@ -199,7 +272,7 @@ const submitForm = () => {
 };
 
 const deleteOrder = () => {
-  FirebaseService.position(`${props.selectedObject.id}`).remove();
+  FirebaseService.order(`${props.selectedObject.id}`).remove();
 
   handleModalClose();
 };
@@ -211,6 +284,7 @@ watch(
       form.orderTable.value = props.selectedObject.table;
       form.orderGuestsNumber.value = props.selectedObject.guestsNumber;
       form.orderWaiter.value = props.selectedObject.waiter;
+      orderContent.value = props.selectedObject.content;
     }
   }
 );

@@ -1,6 +1,6 @@
 <template>
   <BaseContainer>
-    <div class="positions">
+    <div class="orders">
       <OrdersControlPanel
         :search="search"
         :order-status-filter="orderStatusFilter"
@@ -12,7 +12,7 @@
         @updateModalStatus="handleModalOpen"
       />
       <OrdersTable
-        class="positions__table"
+        class="orders__table"
         :orders="orders"
         :search="search"
         :order-status-filter="orderStatusFilter"
@@ -148,4 +148,16 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.orders {
+  display: flex;
+  flex-direction: column;
+
+  &__table {
+    border-top: 1px solid #ccc;
+
+    padding-top: 8px;
+    width: 100%;
+  }
+}
+</style>

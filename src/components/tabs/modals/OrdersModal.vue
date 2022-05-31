@@ -8,98 +8,75 @@
       <div class="modal__content">
         <div class="modal__input-container">
           <BaseInput
-            v-model="form.positionName.value"
-            placeholder="Название позиции"
+            v-model="form.orderTable.value"
+            placeholder="Название/номер стола"
             type="text"
             :isOpened="false"
             :class="{
               modal__input: true,
-              invalid: !form.positionName.valid && form.positionName.touched,
+              invalid: !form.orderTable.valid && form.orderTable.touched,
             }"
-            @blur="form.positionName.blur"
+            @blur="form.orderTable.blur"
           />
 
           <BaseInputError
-            v-if="
-              form.positionName.touched && form.positionName.errors.required
-            "
+            v-if="form.orderTable.touched && form.orderTable.errors.required"
           >
             Поле должно быть заполнено
           </BaseInputError>
         </div>
+
         <div class="modal__input-container">
           <BaseInput
-            v-model="form.positionPrice.value"
-            placeholder="Цена позиции"
+            v-model="form.orderGuestsNumber.value"
+            placeholder="Количество гостей"
             type="text"
             :isOpened="false"
             :class="{
               modal__input: true,
-              invalid: !form.positionPrice.valid && form.positionPrice.touched,
+              invalid:
+                !form.orderGuestsNumber.valid && form.orderGuestsNumber.touched,
             }"
-            @blur="form.positionPrice.blur"
+            @blur="form.orderGuestsNumber.blur"
           />
 
           <BaseInputError
             v-if="
-              form.positionPrice.touched && form.positionPrice.errors.required
+              form.orderGuestsNumber.touched &&
+              form.orderGuestsNumber.errors.required
             "
           >
             Поле должно быть заполнено
           </BaseInputError>
         </div>
+
         <div class="modal__input-container">
           <div class="modal__select-label">
-            <div>Категория:</div>
+            <div>Официант:</div>
             <BaseSelect
-              v-model="form.positionCategory.value"
+              v-model="form.orderWaiter.value"
               :class="{
                 modal__select: true,
-                invalid:
-                  !form.positionCategory.valid && form.positionCategory.touched,
+                invalid: !form.orderWaiter.valid && form.orderWaiter.touched,
               }"
-              @blur="form.positionCategory.blur"
+              @blur="form.orderWaiter.blur"
             >
-              <option v-for="category in props.categories" :key="category.id">
-                {{ category.name }}
+              <option v-for="waiter in props.waiters" :key="waiter.id">
+                {{ waiter.name }}
               </option>
             </BaseSelect>
           </div>
 
           <BaseInputError
-            v-if="
-              form.positionCategory.touched &&
-              form.positionCategory.errors.required
-            "
+            v-if="form.orderWaiter.touched && form.orderWaiter.errors.required"
           >
             Поле должно быть заполнено
           </BaseInputError>
         </div>
-        <div class="modal__input-container">
-          <div class="modal__select-label">
-            <div>Тип:</div>
-            <BaseSelect
-              v-model="form.positionType.value"
-              :class="{
-                modal__select: true,
-                invalid: !form.positionType.valid && form.positionType.touched,
-              }"
-              @blur="form.positionType.blur"
-            >
-              <option v-for="type in props.positionTypes" :key="type.id">
-                {{ type }}
-              </option>
-            </BaseSelect>
-          </div>
 
-          <BaseInputError
-            v-if="
-              form.positionType.touched && form.positionType.errors.required
-            "
-          >
-            Поле должно быть заполнено
-          </BaseInputError>
-        </div>
+        <!-- TODO -->
+        <OrderContentMaker :order-content="orderContent" />
+
         <div class="modal__buttons">
           <BaseButton
             @click="submitForm"
@@ -122,7 +99,7 @@
         </div>
         <div
           :hidden="!props.isFormatting"
-          @click="deletePosition"
+          @click="deleteOrder"
           class="modal__delete"
         >
           удалить позицию
@@ -133,7 +110,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, watch } from "vue";
+import { ref, defineProps, defineEmits, watch } from "vue";
 import { useForm } from "@/use/form";
 import FirebaseService from "@/services/FirebaseService";
 import BaseModal from "@/components/base/BaseModal.vue";
@@ -141,12 +118,14 @@ import BaseInput from "@/components/base/BaseInput.vue";
 import BaseInputError from "@/components/base/BaseInputError.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseSelect from "@/components/base/BaseSelect.vue";
+import OrderContentMaker from "@/components/tabs/contentMakers/OrderContentMaker.vue";
 
 const props = defineProps([
   "isModalShown",
   "isFormatting",
   "selectedObject",
   "waiters",
+  "positions",
 ]);
 
 const emit = defineEmits(["modal-closed"]);
@@ -157,25 +136,24 @@ const handleModalClose = () => {
   emit("modal-closed");
 };
 
+// содержимое заказа
+const orderContent = ref([{ id: 1, position: "", amount: 0, sum: 0 }]);
+
 // валидаторы
 const required = (value) => !!value;
 
 // использование хука useForm для передачи
 // хуку useField в дальнейшем и валидации полей
 const form = useForm({
-  positionName: {
+  orderTable: {
     value: "",
     validators: { required },
   },
-  positionPrice: {
+  orderGuestsNumber: {
     value: "",
     validators: { required },
   },
-  positionCategory: {
-    value: "",
-    validators: { required },
-  },
-  positionType: {
+  orderWaiter: {
     value: "",
     validators: { required },
   },
@@ -193,36 +171,34 @@ const cleanForm = () => {
 
 const submitForm = () => {
   if (!props.isFormatting) {
-    console.log("Создание позиции");
+    console.log("Создание заказа");
 
-    let position = {
+    let order = {
       id: new Date().getTime().toString(),
-      name: form.positionName.value,
-      price: form.positionPrice.value,
-      category: form.positionCategory.value,
-      type: form.positionType.value,
+      table: form.orderTable.value,
+      guestsNumber: form.orderGuestsNumber.value,
+      waiter: form.orderWaiter.value,
     };
 
-    FirebaseService.position(position.id).set(position);
+    FirebaseService.order(order.id).set(order);
   } else {
-    console.log("Редактирование позиции");
+    console.log("Редактирование заказа");
 
-    let changedPosition = {};
+    let changedOrder = {};
 
-    Object.assign(changedPosition, props.selectedObject);
+    Object.assign(changedOrder, props.selectedObject);
 
-    changedPosition.name = form.positionName.value;
-    changedPosition.price = form.positionPrice.value;
-    changedPosition.category = form.positionCategory.value;
-    changedPosition.type = form.positionType.value;
+    changedOrder.table = form.orderTable.value;
+    changedOrder.guestsNumber = form.orderGuestsNumber.value;
+    changedOrder.waiter = form.orderWaiter.value;
 
-    FirebaseService.position(`${changedPosition.id}`).set(changedPosition);
+    FirebaseService.order(`${changedOrder.id}`).set(changedOrder);
   }
 
   handleModalClose();
 };
 
-const deletePosition = () => {
+const deleteOrder = () => {
   FirebaseService.position(`${props.selectedObject.id}`).remove();
 
   handleModalClose();
@@ -232,10 +208,9 @@ watch(
   () => props.selectedObject,
   () => {
     if (props.selectedObject !== null) {
-      form.positionName.value = props.selectedObject.name;
-      form.positionPrice.value = props.selectedObject.price;
-      form.positionCategory.value = props.selectedObject.category;
-      form.positionType.value = props.selectedObject.type;
+      form.orderTable.value = props.selectedObject.table;
+      form.orderGuestsNumber.value = props.selectedObject.guestsNumber;
+      form.orderWaiter.value = props.selectedObject.waiter;
     }
   }
 );

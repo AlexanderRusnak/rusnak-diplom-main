@@ -22,10 +22,10 @@ import TableLite from "vue3-table-lite";
 const emit = defineEmits(["row-clicked"]);
 
 const props = defineProps([
-  "positions",
   "orders",
   "search",
   "orderStatusFilter",
+  "orderWaiterFilter",
 ]);
 
 // клик на строку таблицы
@@ -72,28 +72,32 @@ const table = reactive({
   rows: [],
   totalRecordCount: 0,
   sortable: {
-    order: "id",
+    order: "idf",
     sort: "asc",
   },
 });
 
-const filterPositionsBySearchQuery = () => {
-  let filteredPositions = [];
+const filterOrders = () => {
+  let filteredOrders = [];
 
-  if (props.positions) {
-    filteredPositions = props.positions
-      .filter((item) => {
-        return item.name.toLowerCase().startsWith(props.search.toLowerCase());
-      })
-      .filter((item) => {
-        return (
-          props.positionTypeFilter === "Все заказы" ||
-          item.status === props.orderStatusFilter
-        );
-      });
+  console.log(props.orders);
+
+  if (props.orders.length > 0) {
+    filteredOrders = props.orders.filter((item) => {
+      return item.table
+        .toString()
+        .toLowerCase()
+        .startsWith(props.search.toLowerCase());
+    });
+    // .filter((item) => {
+    //   return (
+    //     props.orderStatusFilter === "Все заказы" ||
+    //     item.status === props.orderStatusFilter
+    //   );
+    // });
   }
 
-  return filteredPositions;
+  return filteredOrders;
 };
 
 /**
@@ -101,30 +105,31 @@ const filterPositionsBySearchQuery = () => {
  */
 const doSearch = (offset, limit, order, sort) => {
   table.isLoading = true;
+
   table.isReSearch = offset == undefined ? true : false;
   if (offset >= 10 || limit >= 20) {
     limit = 20;
   }
-  table.rows = filterPositionsBySearchQuery();
+  table.rows = filterOrders();
   table.totalRecordCount = 20;
   table.sortable.order = order;
   table.sortable.sort = sort;
 };
 // First get data
-doSearch(0, 10, "id", "asc");
+doSearch(0, 10, "idf", "asc");
 
 watch(
-  () => props.positions,
-  () => doSearch(0, 10, "id", "asc")
+  () => props.orders,
+  () => doSearch(0, 10, "idf", "asc")
 );
 
 watch(
   () => props.search,
-  () => doSearch(0, 10, "id", "asc")
+  () => doSearch(0, 10, "idf", "asc")
 );
 
 watch(
-  () => props.positionTypeFilter,
-  () => doSearch(0, 10, "id", "asc")
+  () => props.orderStatusFilter,
+  () => doSearch(0, 10, "idf", "asc")
 );
 </script>

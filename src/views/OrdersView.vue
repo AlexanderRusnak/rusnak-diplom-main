@@ -14,12 +14,13 @@
       <OrdersTable
         class="positions__table"
         :orders="orders"
-        :positions="positions"
         :search="search"
         :order-status-filter="orderStatusFilter"
+        :order-waiter-filter="orderWaiterFilter"
         @row-clicked="handleRowClicked"
       />
       <OrdersModal
+        :positions="positions"
         :is-modal-shown="isModalShown"
         :is-formatting="isFormatting"
         :selected-object="selectedObject"
@@ -56,7 +57,7 @@ onMounted(() => {
       }));
     }
 
-    positions.value = ordersList;
+    orders.value = ordersList;
   });
 
   FirebaseService.positions().on("value", (snapshot) => {

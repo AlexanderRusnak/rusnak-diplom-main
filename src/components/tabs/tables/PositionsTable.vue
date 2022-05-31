@@ -60,13 +60,15 @@ const table = reactive({
   },
 });
 
-const filterPositionsBySearchQuery = () => {
+const filterPositions = () => {
   let filteredPositions = [];
 
-  if (props.positions) {
+  if (props.positions.length > 0) {
     filteredPositions = props.positions
       .filter((item) => {
-        return item.name.toLowerCase().startsWith(props.search.toLowerCase());
+        return item?.name
+          ?.toLowerCase()
+          .startsWith(props?.search?.toLowerCase());
       })
       .filter((item) => {
         return (
@@ -88,7 +90,7 @@ const doSearch = (offset, limit, order, sort) => {
   if (offset >= 10 || limit >= 20) {
     limit = 20;
   }
-  table.rows = filterPositionsBySearchQuery();
+  table.rows = filterPositions();
   table.totalRecordCount = 20;
   table.sortable.order = order;
   table.sortable.sort = sort;

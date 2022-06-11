@@ -33,12 +33,24 @@ const handleRowClicked = (rowData) => {
   emit("row-clicked", rowData);
 };
 
+// создание строки дата-время из timestamp
+const formatDate = (value) => {
+  const date = new Date(Number.parseInt(value.id));
+
+  const formattedDate = `${date.getDate()}.${
+    date.getMonth() + 1
+  }.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+
+  return formattedDate;
+};
+
 // Table config
 const table = reactive({
   isLoading: false,
   columns: [
     {
-      label: "№ заказа",
+      label: "Дата",
+      display: formatDate,
       field: "id",
       width: "5%",
       sortable: false,

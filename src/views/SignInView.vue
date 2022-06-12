@@ -1,6 +1,6 @@
 <template>
   <div class="sign-in-view">
-    <div class="sign-in-view__title">Авторизация</div>
+    <div class="sign-in-view__title">Аутентификация</div>
     <SignInForm />
     <router-link class="sign-in-view__link" to="/password-forget">
       Забыли пароль?

@@ -53,7 +53,7 @@ const table = reactive({
       display: formatDate,
       field: "id",
       width: "5%",
-      sortable: false,
+      sortable: true,
       isKey: true,
     },
     {
@@ -128,30 +128,40 @@ const doSearch = (offset, limit, order, sort) => {
     limit = 20;
   }
   table.rows = filterOrders();
+  if (sort == "asc") {
+    table.rows = table.rows.sort(
+      (a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)
+    );
+  } else {
+    table.rows = table.rows
+      .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt))
+      .reverse();
+  }
+
   table.totalRecordCount = 20;
   table.sortable.order = order;
   table.sortable.sort = sort;
 };
 // First get data
-doSearch(0, 10, "idf", "asc");
+doSearch(0, 10, "id", "desc");
 
 watch(
   () => props.orders,
-  () => doSearch(0, 10, "idf", "asc")
+  () => doSearch(0, 10, "id", "desc")
 );
 
 watch(
   () => props.search,
-  () => doSearch(0, 10, "idf", "asc")
+  () => doSearch(0, 10, "id", "desc")
 );
 
 watch(
   () => props.orderStatusFilter,
-  () => doSearch(0, 10, "idf", "asc")
+  () => doSearch(0, 10, "id", "desc")
 );
 
 watch(
   () => props.orderWaiterFilter,
-  () => doSearch(0, 10, "idf", "asc")
+  () => doSearch(0, 10, "id", "desc")
 );
 </script>
